@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Hack 2.0</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #0d1117;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        canvas {
+            display: block;
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            z-index: 1;
+        }
+
+        .updates {
+            margin: 50px auto;
+            max-width: 800px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1c1c1e, #2a2a2e);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            color: #e6e6e6;
+            text-align: left;
+        }
+
+        .updates h3 {
+            color: #eb0029;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .updates ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .updates li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .updates li strong {
+            color: #f39c12;
+        }
+
+        .updates ul ul {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        .updates ul ul li {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Title (using particles) -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Updates Section -->
+    <div class="updates">
+        <h3>Wat is nieuw en wat gaat er gebeuren?</h3>
+        <ul>
+            <li><strong>Overgang naar PHP:</strong> Onze website is momenteel in onderhoud. We ontwikkelen een volledig nieuwe versie met een vernieuwd login-systeem.</li>
+            <li><strong>Accounts:</strong> Bestaande accounts worden verwijderd. U ontvangt een e-mail met meer informatie en kunt na de lancering een nieuw account aanmaken.</li>
+            <li><strong>Nieuwe functies:</strong>
+                <ul>
+                    <li>Ingebouwde terminal voor het uitvoeren van scripts in verschillende talen zoals Python en JavaScript.</li>
+                    <li>Nieuwe presentatiemaker met tools voor codefragmenten en live demo's.</li>
+                    <li>Modern redesign van de gebruikersinterface.</li>
+                    <li></li>
+                    <li>Personalisatie van ledenaccounts met kleuren en thema's.</li>
+                    <li>Dark en light mode voor een betere visuele ervaring.</li>
+                    <li>Nieuwe functies voor docenten en leerlingen via Netwise, zoals een verbeterde kalender.</li>
+                </ul>
+            </li>
+            <li>We begrijpen dat dit ongemakkelijk kan zijn, maar we doen ons best om de overgang soepel te laten verlopen. Dank voor uw geduld!</li>
+        </ul>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("particleCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = 300;
+
+        const particles = [];
+        const particleSpacing = 3; // Smaller spacing for denser particles
+        const particleRadius = 2.5; // Larger radius for better visibility
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.baseX = x;
+                this.baseY = y;
+                this.color = color;
+                this.radius = particleRadius;
+                this.density = Math.random() * 20 + 1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                const dx = this.baseX - this.x;
+                const dy = this.baseY - this.y;
+                this.x += dx / this.density;
+                this.y += dy / this.density;
+            }
+        }
+
+        function createParticles(text, offsetY, color, fontSize) {
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.fillStyle = color;
+            ctx.textAlign = "center";
+            ctx.fillText(text, canvas.width / 2, canvas.height / 2 + offsetY);
+
+            const textCoordinates = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+            for (let y = 0; y < canvas.height; y += particleSpacing) {
+                for (let x = 0; x < canvas.width; x += particleSpacing) {
+                    const index = (y * canvas.width + x) * 4;
+                    if (textCoordinates[index + 3] > 128) {
+                        particles.push(new Particle(x, y, color));
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((particle) => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        function init() {
+            particles.length = 0;
+            createParticles("How to Hack 2.0", -40, "#EB0029", 80); // Red for the title
+            createParticles("9 februari 2025", 60, "#FFFFFF", 40); // White for the date
+        }
+
+        // Initialize particles and animate
+        init();
+        animateParticles();
+
+        // Ensure particles reinitialize on window resize
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = 300;
+            init();
+        });
+    </script>
+</body>
+</html>
